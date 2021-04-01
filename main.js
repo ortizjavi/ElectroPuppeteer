@@ -44,7 +44,9 @@ const scrapePage = async (page, href) => {
       let bodyHTML = await page.evaluate(() => document.body.innerHTML);
     
       let $ = cheerio.load(bodyHTML);
-      
+
+
+      let index = 0;
       for (let element of extractNameUrlImg($)){
         try {
           await page.goto(element.websiteRef);
@@ -60,6 +62,11 @@ const scrapePage = async (page, href) => {
         } catch (error) {
           console.log(`Error on website ${element.websiteRef}`)
           console.error(error);
+        }
+
+        index++;
+        if (index == 2){
+        	break;
         }
       }
 
@@ -148,7 +155,7 @@ categories = categories.map((category) => category.toLowerCase().normalize("NFD"
 (async () => {
   try {
 
-	  const url = 'https://www.electromenager-compare.com/';
+    const url = 'https://www.electromenager-compare.com/';
     const url2 = 'https://www.lcd-compare.com/#';
     
     let data = await scrapeUrl(url2);

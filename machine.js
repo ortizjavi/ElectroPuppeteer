@@ -83,19 +83,51 @@ extractOrigin = ($) => {
   try {
     let value = null;
 
-    $('col-xs-12 col-md-9 product-tech-text').each((i, div) => {
+    $('.col-xs-12.col-md-9.product-tech-text').each((i, div) => {
       div = $(div);
       if (div.text().includes('Origine de fabrication :')){
-        value = div.text().trim();
+        value = div.text();
       }
     });
-    return value.split(':')[1];
+    return value.split(':')[1].trim();
   } catch (error){
     return null;
   }
 }
 
-const extractMachine = ($) => {
+extractPackedWeight = ($) => {
+  let packed = extractFromProductTech($, 'Poids emballé :');
+  if (packed[0]){
+    return packed[0];
+  }
+
+  return null;
+}
+
+extractUnpackedWeight = ($) => {
+  let unpacked = extractFromProductTech($, 'Poids déballé :');
+  if (unpacked[0]){
+    return unpacked[0];
+  }
+
+  return null;
+}
+
+extractScreenSize = ($) => {
+  let size = extractFromProductTech($, 'Diagonale :');
+  if (size[0]){
+    return size[0].split('(')[1].replace(')','');
+  }
+
+  return null;
+}
+
+
+
+
+const extractMachine = ($, category) => {
+
+
     return obj = {  
         brandRef: extractBrandRef($),
         brand: extractBrandName($),
@@ -108,7 +140,10 @@ const extractMachine = ($) => {
         sparePartsAvailability: extractFromProductTech($, 'Dispo. des pièces détachées :')[0],
         reparabilityIndex: extractReparability($),
         fabricationOrigin: extractOrigin($),
-        weight: extractFromProductTech($, 'Poids emballé :')[0]
+        packedWeight : extractPackedWeight($),
+        unpackedWeight : extractUnpackedWeight($),
+        productType : extractFromProductTech($, 'Type :')[0],
+        screenSize : extractScreenSize($)
      }
 }
 
